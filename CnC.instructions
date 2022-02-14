@@ -1,0 +1,14 @@
+Step 1:
+	Create server and client side code
+		The server is able to interact with 20 connections at once, and the client can send requests and connections to this server
+Step 2:
+	Create the basic command line interface for the CnC server.
+		Start with simple commands such as listing the available connections
+			Run the program
+			The program shows beautiful text
+			the help command shows all the available commands
+			The available commands - list, activate, connect, send, anhilate, hashcracker, update
+		Then the active vs inactive connections
+	Also the ability to check the total number of systems
+Step 3:
+	The client should have a unique name
