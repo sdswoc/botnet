@@ -1,0 +1,44 @@
+CnC Server Test Message Logs
+
+Wed Feb 16 23:19:26 2022: GET / HTTP/1.1
+Host: google.com
+
+
+Wed Feb 16 23:25:48 2022: GET / HTTP/1.1
+Host: google.com
+
+
+Wed Feb 16 23:26:25 2022: GET / HTTP/1.1
+Host: google.com
+
+
+Wed Feb 16 23:26:28 2022: GET / HTTP/1.1
+Host: google.com
+
+
+Wed Feb 16 23:26:30 2022: GET / HTTP/1.1
+Host: google.com
+
+
+Wed Feb 16 23:26:32 2022: GET / HTTP/1.1
+Host: google.com
+
+
+Wed Feb 16 23:41:06 2022: Handshake Initialised from 
+Wed Feb 16 23:42:16 2022: Handshake Initialised from Ymir
+
+Wed Feb 16 23:45:06 2022: Handshake Initialised from Ymir
+
+Wed Feb 16 23:45:08 2022: Handshake Initialised from Ymir
+
+Wed Feb 16 23:45:09 2022: Handshake Initialised from Ymir
+
+Wed Feb 16 23:47:48 2022: Handshake Initialised from Ymir
+:('127.0.0.1', 52920)Wed Feb 16 23:47:53 2022: Handshake Initialised from Ymir
+:('127.0.0.1', 52922)Wed Feb 16 23:49:16 2022: (('127.0.0.1', 52924)) Handshake Initialised from Ymir
+Wed Feb 16 23:49:18 2022: (('127.0.0.1', 52926)) Handshake Initialised from Ymir
+Wed Feb 16 23:55:53 2022: (127.0.0.1:52932) Handshake Initialised from Ymir
+Wed Feb 16 23:56:23 2022: (127.0.0.1:52934) Handshake Initialised from Ymir
+Wed Feb 16 23:56:26 2022: (127.0.0.1:52936) Handshake Initialised from Ymir
+Thu Feb 17 00:05:14 2022: (127.0.0.1:52938) Handshake Initialised from Ymir
+Thu Feb 17 00:05:23 2022: (127.0.0.1:52940) Handshake Initialised from Ymir
