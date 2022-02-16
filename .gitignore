@@ -1,2 +1,6 @@
 workspace.code-workspace
 file
+nc.py
+proxyithink.py
+tcpclient.py
+tcpserver.py
