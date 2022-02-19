@@ -12,3 +12,7 @@ Step 2:
 	Also the ability to check the total number of systems
 Step 3:
 	The client should have a unique name
+
+Corrections:
+	In case client has disconnected, free the port in server (right now its clogging) isko log kardena
+	async functions - check thread and while loops

