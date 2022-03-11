@@ -16,3 +16,9 @@ Step 3:
 Corrections:
 	In case client has disconnected, free the port in server (right now its clogging) isko log kardena
 	async functions - check thread and while loops
+
+Update tasks:
+	Add Command execution
+	Requests Command
+	Client has disconnected error (free)
+	
