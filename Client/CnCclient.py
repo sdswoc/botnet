@@ -13,7 +13,7 @@ def execute(cmd):
         return
     elif split[0]=="cd":
         try:
-            directory =''
+            directory = ''
             i = 1
             while i < len(split):
                 directory += split[i]
