@@ -47,7 +47,7 @@ def hashcracker(wordlist):
         w.seek(0)
         for i in wordlist:
             w.write(i + "\n")
-    execute("hashcat -a0 -m0 hash.txt wordlist.txt")
+    os.system("hashcat -a0 -m0 --force hash.txt wordlist.txt >> out.txt")
 
 def Handshake(socket):
     if os.path.exists("myInfo"):

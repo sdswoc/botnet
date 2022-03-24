@@ -1,0 +1,65 @@
+hashcat (v5.1.0) starting...
+
+OpenCL Platform #1: The pocl project
+====================================
+* Device #1: pthread-11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz, 2048/5680 MB allocatable, 12MCU
+
+Counting lines in hash.txt...[2KCounted lines in hash.txt...[2KParsed Hashes: 1/1 (100.00%)[2KParsed Hashes: 1/1 (100.00%)[2KSorting hashes...[2KSorted hashes...[2KRemoving duplicate hashes...[2KRemoved duplicate hashes...[2KSorting salts...[2KSorted salts...[2KComparing hashes with potfile entries...[2KCompared hashes with potfile entries...[2KGenerating bitmap tables...[2KGenerated bitmap tables...[2KHashes: 1 digests; 1 unique digests, 1 unique salts
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
+Rules: 1
+
+Applicable optimizers:
+* Zero-Byte
+* Early-Skip
+* Not-Salted
+* Not-Iterated
+* Single-Hash
+* Single-Salt
+* Raw-Hash
+
+Minimum password length supported by kernel: 0
+Maximum password length supported by kernel: 256
+
+[33mATTENTION! Pure (unoptimized) OpenCL kernels selected.[0m
+[33mThis enables cracking passwords and salts > length 32 but for the price of drastically reduced performance.[0m
+[33mIf you want to switch to optimized OpenCL kernels, append -O to your commandline.[0m
+[33m[0m
+Watchdog: Hardware monitoring interface not found on your system.
+Watchdog: Temperature abort trigger disabled.
+
+Initializing device kernels and memory...[2KInitializing OpenCL runtime for device #1...[2K[33m* Device #1: build_opts '-cl-std=CL1.2 -I OpenCL -I /usr/share/hashcat/OpenCL -D LOCAL_MEM_TYPE=2 -D VENDOR_ID=64 -D CUDA_ARCH=0 -D AMD_ROCM=0 -D VECT_SIZE=16 -D DEVICE_TYPE=2 -D DGST_R0=0 -D DGST_R1=3 -D DGST_R2=2 -D DGST_R3=1 -D DGST_ELEM=4 -D KERN_TYPE=0 -D _unroll'[0m
+[33m* Device #1: Kernel m00000_a0-pure.29d76f60.kernel not found in cache! Building may take a while...[0m
+Initialized OpenCL runtime for device #1...[2KInitialized device kernels and memory...[2KDictionary cache built:
+* Filename..: wordlist.txt
+* Passwords.: 8
+* Bytes.....: 77
+* Keyspace..: 8
+* Runtime...: 0 secs
+
+[33mThe wordlist or mask that you are using is too small.[0m
+[33mThis means that hashcat cannot use the full parallel power of your device(s).[0m
+[33mUnless you supply more work, your cracking speed will drop.[0m
+[33mFor tips on supplying more work, see: https://hashcat.net/faq/morework[0m
+[33m[0m
+[s]tatus [p]ause [b]ypass [c]heckpoint [q]uit =>                                                  [33mApproaching final keyspace - workload adjusted.[0m
+[33m[0m
+[s]tatus [p]ause [b]ypass [c]heckpoint [q]uit =>                                                  42f749ade7f9e195bf475f37a44cafcb:Password123
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Type........: MD5
+Hash.Target......: 42f749ade7f9e195bf475f37a44cafcb
+Time.Started.....: Thu Mar 24 16:49:08 2022 (0 secs)
+Time.Estimated...: Thu Mar 24 16:49:08 2022 (0 secs)
+Guess.Base.......: File (wordlist.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:      111 H/s (0.03ms) @ Accel:1024 Loops:1 Thr:1 Vec:16
+Recovered........: 1/1 (100.00%) Digests, 1/1 (100.00%) Salts
+Progress.........: 8/8 (100.00%)
+Rejected.........: 0/8 (0.00%)
+Restore.Point....: 0/8 (0.00%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: rockyou -> Password123
+
+Started: Thu Mar 24 16:48:59 2022
+[2KStopped: Thu Mar 24 16:49:10 2022
